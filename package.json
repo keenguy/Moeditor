@@ -5,7 +5,8 @@
   "main": "app/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "start": "electron .",
+    "pack": "electron-packager . Moeditor --out ./dist --overwrite --icon=./icons/Moeditor"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
     "configstore": "^2.1.0",
     "electron": "^1.4.0",
     "electron-localshortcut": "^0.6.1",
+    "electron-packager": "^8.7.0",
     "electron-titlebar": "0.0.2",
     "flowchart.js": "^1.6.3",
     "font-awesome": "^4.6.3",
