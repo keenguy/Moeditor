@@ -65,6 +65,14 @@ class MoeditorWindow {
             this.window.webContents.openDevTools();
         }
 	}
+    /* open file only from treeView */
+    openFile(path){
+        if(!MoeditorFile.isFile(path)){
+            return false;
+        }
+        this.fileName = path;
+        this.fileContent = this.content = MoeditorFile.read(path).toString();
+    }
 
     registerEvents() {
         this.window.on('close', (e) => {

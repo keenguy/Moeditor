@@ -22,29 +22,36 @@
 'use strict';
 
 const MoeditorWindow = require('./moe-window'),
-      MoeditorAction = require('./moe-action'),
-      MoeditorFile = require('./moe-file'),
-      shortcut = require('electron-localshortcut'),
-      MoeditorLocale = require('./moe-l10n'),
-      MoeditorAbout = require('./moe-about'),
-      MoeditorSettings = require('./moe-settings'),
-      path = require('path');
+    MoeditorAction = require('./moe-action'),
+    MoeditorFile = require('./moe-file'),
+    shortcut = require('electron-localshortcut'),
+    MoeditorLocale = require('./moe-l10n'),
+    MoeditorAbout = require('./moe-about'),
+    MoeditorSettings = require('./moe-settings'),
+    path = require('path');
 
 class MoeditorApplication {
-	constructor() {
-		this.windows = new Array();
-        this.newWindow = null;
-	}
+    constructor() {
+        this.windows = new Array(); //multiple main windows may exist at the same time
+        this.newWindow = null;     //refers to the newest created main window
+    }
 
-	open(fileName) {
+    open(fileName) {
         if (typeof fileName === 'undefined') {
-            this.windows.push(new MoeditorWindow(process.cwd()));
+            const path = moeApp.config.get('cwd');
+            if (MoeditorFile.isDirectory(path)) {
+                console.log(path);
+                this.windows.push(new MoeditorWindow(path));
+            } else {
+                console.log(process.cwd());
+                this.windows.push(new MoeditorWindow(process.cwd()));
+            }
         } else {
             this.windows.push(new MoeditorWindow(fileName));
         }
-	}
+    }
 
-	run() {
+    run() {
         global.Const = require('./moe-const');
 
         app.setName(Const.name);
@@ -59,7 +66,7 @@ class MoeditorApplication {
         this.flag = new Object();
 
         const a = process.argv;
-        if (a[0].endsWith('electron') && a[1] == '.') a.shift(), a.shift();
+        if (a[0].toLowerCase().endsWith('electron') && a[1] == '.') a.shift(), a.shift();
         else a.shift();
         var docs = a.filter((s) => {
             if (s == '--debug') moeApp.flag.debug = true;
@@ -85,9 +92,8 @@ class MoeditorApplication {
         }
 
         if (typeof this.osxOpenFile === 'string') docs.push(this.osxOpenFile);
-
         if (docs.length == 0) this.open();
-		else for (var i = 0; i < docs.length; i++) {
+        else for (var i = 0; i < docs.length; i++) {
             docs[i] = path.resolve(docs[i]);
             this.addRecentDocument(docs[i]);
             this.open(docs[i]);
@@ -97,7 +103,7 @@ class MoeditorApplication {
         else this.registerShortcuts();
 
         this.listenSettingChanges();
-	}
+    }
 
     registerAppMenu() {
         require('./moe-menu')(
