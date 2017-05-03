@@ -39,12 +39,13 @@ class MoeditorApplication {
     open(fileName) {
         if (typeof fileName === 'undefined') {
             const path = moeApp.config.get('cwd');
-            if (MoeditorFile.isDirectory(path)) {
+            if (MoeditorFile.isDirectory(path) || MoeditorFile.isFile(path)) {
                 this.windows.push(new MoeditorWindow(path));
             } else {
                 this.windows.push(new MoeditorWindow(process.cwd()));
             }
         } else {
+            this.config.set('cwd', fileName);
             this.windows.push(new MoeditorWindow(fileName));
         }
     }
