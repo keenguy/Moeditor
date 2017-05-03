@@ -38,7 +38,7 @@ class MoeditorApplication {
 
     open(fileName) {
         if (typeof fileName === 'undefined') {
-            const path = moeApp.config.get('cwd');
+            const path = this.config.get('cwd');
             if (MoeditorFile.isDirectory(path) || MoeditorFile.isFile(path)) {
                 this.windows.push(new MoeditorWindow(path));
             } else {
@@ -65,7 +65,7 @@ class MoeditorApplication {
         this.flag = new Object();
 
         const a = process.argv;
-        if (a[0].toLowerCase().endsWith('electron') && a[1] == '.') a.shift(), a.shift();
+        if (a[0].toLowerCase().indexOf('electron') >= 0 && a[1] == '.') a.shift(), a.shift();
         else a.shift();
         var docs = a.filter((s) => {
             if (s == '--debug') moeApp.flag.debug = true;
