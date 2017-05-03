@@ -72,6 +72,7 @@ class MoeditorWindow {
         }
         this.fileName = path;
         this.fileContent = this.content = MoeditorFile.read(path).toString();
+        this.window.loadURL('file://' + Const.path + '/views/main/index.html');
     }
 
     registerEvents() {

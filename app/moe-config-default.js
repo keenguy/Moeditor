@@ -40,5 +40,5 @@ module.exports = {
     'render-theme': 'GitHub',
     'custom-render-themes': {},
     'custom-csss': {},
-    'cwd': '/Users/yonggu/Coding'
+    'cwd': '/'
 };

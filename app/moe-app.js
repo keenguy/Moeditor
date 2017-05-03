@@ -40,10 +40,8 @@ class MoeditorApplication {
         if (typeof fileName === 'undefined') {
             const path = moeApp.config.get('cwd');
             if (MoeditorFile.isDirectory(path)) {
-                console.log(path);
                 this.windows.push(new MoeditorWindow(path));
             } else {
-                console.log(process.cwd());
                 this.windows.push(new MoeditorWindow(process.cwd()));
             }
         } else {

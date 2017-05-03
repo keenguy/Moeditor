@@ -31,7 +31,7 @@ class MoeditorAction {
     static open() {
         const files = dialog.showOpenDialog(
             {
-                properties: ['openFile', 'multiSelections'],
+                properties: ['openFile', 'openDirectory'],
                 filters: [
                     { name: __("Markdown Documents"), extensions: [ 'md', 'mkd', 'markdown' ] },
                     { name: __("All Files"), extensions: [ '*' ] }
