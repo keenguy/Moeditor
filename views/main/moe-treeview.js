@@ -83,16 +83,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.getAttribute('data-expanded') === 'true') {
             e.setAttribute('data-expanded', 'false');
             const subItems = e.getElementsByClassName('tree-view-subitems')[0];
+            //if path can't be closed, then just hide it, don't remove it
             if (!path.close()) subItems.style.display = 'none';
             else subItems.innerHTML = '';
         } else {
             e.setAttribute('data-expanded', 'true');
             if (!path.opened) {
-                path.open();
+                path.open();  //calculate subitems
                 for (const item of path.list) {
                     insertItem(e, item);
                 }
             } else {
+                //just need to show them
                 e.getElementsByClassName('tree-view-subitems')[0].style.display = '';
             }
         }
