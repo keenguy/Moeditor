@@ -78,7 +78,7 @@ module.exports = (cm, force, cb) => {
                 if (res !== undefined) {
                     return res;
                 } else {
-                    mathCnt++, mathID++;
+                    mathCnt++ , mathID++;
                     var id = 'math-' + mathID;
                     var res = '<span id="' + id + '"></span>'
                     math[id] = { s: str, display: display };
@@ -86,6 +86,11 @@ module.exports = (cm, force, cb) => {
                 }
             }
         }, (err, val) => {
+            if (moeApp.config.get('linkBase')) {
+                var cwd = moeApp.config.get('cwd');
+                cwd = path.join(cwd,'/');
+                document.getElementsByTagName('base')[0].setAttribute('href', cwd);
+            }
             rendered = document.createElement('span');
             rendered.innerHTML = val;
             MoeditorMathRenderer.renderMany(math, (math) => {
@@ -95,8 +100,8 @@ module.exports = (cm, force, cb) => {
                 for (let img of imgs) {
                     let src = img.getAttribute('src');
                     if (url.parse(src).protocol === null) {
-                        if (!path.isAbsolute(src)) src = path.resolve(w.directory, src);
-                        src = url.resolve('file://', src);
+                        // if (!path.isAbsolute(src)) src = path.resolve(w.directory, src);
+                        // src = url.resolve('file://', src);
                     }
                     img.setAttribute('src', src);
                 }

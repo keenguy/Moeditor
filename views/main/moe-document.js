@@ -72,11 +72,11 @@ $(() => {
     window.editor = editor;
 
     // workaround for the .button is still :hover after maximize window
-    $('#cover-bottom .button-bottom').mouseover(function() {
+    $('#cover-bottom .button-bottom').mouseover(function () {
         $(this).addClass('hover');
-    }).mouseout(function() {
+    }).mouseout(function () {
         $(this).removeClass('hover');
-    }).click(function() {
+    }).click(function () {
         var s = $(this).data('action');
         if (s === 'menu') MoeditorSideMenu.open();
     });
@@ -98,7 +98,7 @@ $(() => {
             e.preventDefault();
         }
     });
-    $("#container").on('click', 'a', function(e) {
+    $("#container").on('click', 'a', function (e) {
         e.preventDefault();
         const href = this.getAttribute('href');
         if (href.startsWith('#')) {
@@ -115,15 +115,18 @@ $(() => {
     });
 
     if (moeApp.config.get('focus-mode') === true) document.getElementById('editor').classList.add('focus');
-    document.getElementById('button-bottom-focus').addEventListener('click', function() {
+    document.getElementById('button-bottom-focus').addEventListener('click', function () {
         document.getElementById('editor').classList.toggle('focus');
         moeApp.config.set('focus-mode', document.getElementById('editor').classList.contains('focus'));
     });
-
-    require('electron').ipcRenderer.on('set-title', (e, fileName) => {
+    const ipcRenderer = require('electron').ipcRenderer;
+    ipcRenderer.on('set-title', (e, fileName) => {
         document.getElementsByTagName('title')[0].innerText = 'Moeditor - ' + require('path').basename(fileName);
     });
-
+    ipcRenderer.on('openFile',(e, content)=>{
+        editor.doc.setValue(content);
+        window.updatePreview(true);
+    })
     require('./moe-settings');
 
     w.window.show();

@@ -38,14 +38,25 @@ class MoeditorApplication {
 
     open(fileName) {
         if (typeof fileName === 'undefined') {
-            const path = this.config.get('cwd');
-            if (MoeditorFile.isDirectory(path) || MoeditorFile.isFile(path)) {
-                this.windows.push(new MoeditorWindow(path));
-            } else {
+            const cwf = this.config.get('cwf');
+            const cwd = this.config.get('cwd');
+            if (MoeditorFile.isFile(cwf)) {
+                this.windows.push(new MoeditorWindow(cwf));
+            }else if(MoeditorFile.isDirectory(cwd)){
+                this.windows.push(new MoeditorWindow(cwd));
+            }
+             else {
                 this.windows.push(new MoeditorWindow(process.cwd()));
             }
         } else {
-            this.config.set('cwd', fileName);
+            let dir = fileName;
+            if(MoeditorFile.isFile(fileName)){
+                dir = path.dirname(fileName);
+                this.config.set('cwf', fileName)
+            }else{
+                this.config.set('cwf', '');
+            }
+            this.config.set('cwd', dir);
             this.windows.push(new MoeditorWindow(fileName));
         }
     }

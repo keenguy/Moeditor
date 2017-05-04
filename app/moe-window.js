@@ -23,7 +23,8 @@
 const BrowserWindow = require('electron').BrowserWindow,
       dialog = require('electron').dialog,
       MoeditorAction = require('./moe-action'),
-      MoeditorFile = require('./moe-file');
+      MoeditorFile = require('./moe-file'),
+      Path = require('path');
 
 class MoeditorWindow {
 	constructor(path) {
@@ -38,7 +39,6 @@ class MoeditorWindow {
             this.fileName = path;
             this.fileContent = this.content = MoeditorFile.read(path).toString();
         }
-
         this.changed = false;
         const debug = (moeApp.flag.debug | moeApp.config.get('debug')) != 0;
         var conf = {
@@ -60,7 +60,6 @@ class MoeditorWindow {
 
         this.registerEvents();
         this.window.loadURL('file://' + Const.path + '/views/main/index.html');
-
         if (debug) {
             this.window.webContents.openDevTools();
         }
@@ -71,8 +70,11 @@ class MoeditorWindow {
             return false;
         }
         this.fileName = path;
+        // moeApp.config.set('cwd',this.directory)
+        moeApp.config.set('cwf',path);
         this.fileContent = this.content = MoeditorFile.read(path).toString();
-        this.window.loadURL('file://' + Const.path + '/views/main/index.html');
+        // this.window.loadURL('file://' + Const.path + '/views/main/index.html');
+        this.window.webContents.send("openFile", this.content);
     }
 
     registerEvents() {
