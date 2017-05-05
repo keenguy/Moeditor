@@ -1,22 +1,25 @@
 {
-  "name": "moeditor",
+  "name": "myeditor",
   "version": "0.2.0",
-  "description": "Your all-purpose markdown editor",
+  "description": "Forked from moeditor and customized for myself",
   "main": "app/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
-    "pack": "electron-packager . Moeditor --out ./dist --overwrite --icon=./icons/Moeditor"
+    "pack": "electron-packager . Myeditor --out ./dist --overwrite --icon=./icons/Moeditor"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Menci/Moeditor.git"
+    "url": "git+https://github.com/Keenguy/Myeditor.git"
   },
   "keywords": [
     "markdown",
     "editor"
   ],
-  "author": "Menci",
+  "authors": [
+    "Menci",
+    "Keenguy"
+  ],
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/Menci/Moeditor/issues"
