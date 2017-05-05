@@ -62,8 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
         clickedButton = e;
     });
 
-    sideMenu.querySelector('li[data-action=new]').itemClicked = (() => {
-        MoeditorAction.openNew();
+    sideMenu.querySelector('li[data-action=new-window]').itemClicked = (() => {
+        MoeditorAction.NewWindow();
+    });
+
+    sideMenu.querySelector('li[data-action=new-file]').itemClicked = (() => {
+        MoeditorAction.NewFile();
     });
 
     sideMenu.querySelector('li[data-action=open]').itemClicked = (() => {

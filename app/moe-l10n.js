@@ -150,6 +150,7 @@ const strings = {
         "Render": "Render",
         "Language": "Language",
         "Reload when file changed": "Reload when file changed",
+        "Auto save": "Auto save",
         "Font": "Editor Font",
         "Font Size": "Font Size",
         "Line Height": "Line Height",
@@ -200,7 +201,8 @@ const strings = {
     "zh_CN": {
         "_name": "简体中文",
 
-        "New": "新建",
+        "New Window": "新建窗口",
+        "New File": "新建文件",
         "Open": "打开",
         "Save": "保存",
         "Save as": "另存为",
@@ -228,7 +230,7 @@ const strings = {
 
         "Save changes to file?": "将修改保存到文件？",
         "File changed by another program, reload?": "文件被另一程序修改，是否重新加载？",
-
+        "Auto save": "自动保存",
         "Markdown Documents": "Markdown 文档",
         "HTML Documents": "HTML 文档",
         "PDF Documents": "PDF 文档",
