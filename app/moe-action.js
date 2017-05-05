@@ -20,12 +20,17 @@
 
 'use strict';
 
-const {dialog} = require('electron'),
-      MoeditorFile = require('./moe-file');
+const { dialog } = require('electron'),
+    MoeditorFile = require('./moe-file');
 
 class MoeditorAction {
-    static openNew() {
-        moeApp.open();
+    static NewWindow() {
+        moeApp.open('');
+    }
+
+    static NewFile(){
+        let w = require('electron').BrowserWindow.getFocusedWindow().moeditorWindow;
+        w.open();
     }
 
     static open() {
@@ -33,8 +38,8 @@ class MoeditorAction {
             {
                 properties: ['openFile', 'openDirectory'],
                 filters: [
-                    { name: __("Markdown Documents"), extensions: [ 'md', 'mkd', 'markdown' ] },
-                    { name: __("All Files"), extensions: [ '*' ] }
+                    { name: __("Markdown Documents"), extensions: ['md', 'mkd', 'markdown'] },
+                    { name: __("All Files"), extensions: ['*'] }
                 ]
             }
         );
@@ -43,7 +48,12 @@ class MoeditorAction {
 
         for (var file of files) {
             app.addRecentDocument(file);
-            moeApp.open(file);
+            let w = require('electron').BrowserWindow.getFocusedWindow();
+            if (w) {
+                w.moeditorWindow.open(file);
+            } else {
+                moeApp.open(file);
+            }
         }
     }
 
@@ -79,8 +89,8 @@ class MoeditorAction {
         const fileName = dialog.showSaveDialog(w,
             {
                 filters: [
-                    { name: __("Markdown Documents"), extensions: ['md', 'mkd', 'markdown' ] },
-                    { name: __("All Files"), extensions: [ '*' ] }
+                    { name: __("Markdown Documents"), extensions: ['md', 'mkd', 'markdown'] },
+                    { name: __("All Files"), extensions: ['*'] }
                 ]
             }
         );
@@ -118,7 +128,7 @@ class MoeditorAction {
             try {
                 w.moeditorWindow.window.webContents.send('pop-message', { type: 'info', content: __('Exporting as HTML, please wait ...') });
                 MoeditorFile.write(fileName, s);
-                const {shell} = require('electron');
+                const { shell } = require('electron');
                 shell.openItem(fileName);
             } catch (e) {
                 w.moeditorWindow.window.webContents.send('pop-message', { type: 'error', content: __('Can\'t export as HTML') + ', ' + e.toString() });

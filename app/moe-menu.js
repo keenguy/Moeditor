@@ -23,7 +23,14 @@ module.exports = (cb) => {
             localize() { this.label = __('File'); },
             submenu: [
                 {
-                    localize() { this.label = __('New'); },
+                    localize() { this.label = __('New Window'); },
+                    accelerator: 'Command + Option + N',
+                    click(item, w) {
+                        cb.windowNew(w);
+                    }
+                },
+                {
+                    localize() { this.label = __('New File'); },
                     accelerator: 'Command + N',
                     click(item, w) {
                         cb.fileNew(w);

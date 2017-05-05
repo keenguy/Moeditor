@@ -36,29 +36,30 @@ class MoeditorApplication {
         this.newWindow = null;     //refers to the newest created main window
     }
 
+    //open folder/file in new window
     open(fileName) {
-        if (typeof fileName === 'undefined') {
-            const cwf = this.config.get('cwf');
-            const cwd = this.config.get('cwd');
-            if (MoeditorFile.isFile(cwf)) {
-                this.windows.push(new MoeditorWindow(cwf));
-            }else if(MoeditorFile.isDirectory(cwd)){
-                this.windows.push(new MoeditorWindow(cwd));
-            }
-             else {
-                this.windows.push(new MoeditorWindow(process.cwd()));
-            }
-        } else {
-            let dir = fileName;
-            if(MoeditorFile.isFile(fileName)){
-                dir = path.dirname(fileName);
-                this.config.set('cwf', fileName)
-            }else{
-                this.config.set('cwf', '');
-            }
-            this.config.set('cwd', dir);
-            this.windows.push(new MoeditorWindow(fileName));
+        let cwd, cwf;
+        if (typeof fileName === 'undefined') {   //start 
+            cwf = this.config.get('cwf');
+            cwd = this.config.get('cwd');
+        } else if (fileName == '') {   //new window
+            cwd = this.config.get('cwd');
+            cwf = '';
         }
+        else {
+            if (MoeditorFile.isFile(fileName)) {
+                cwd = path.normalize(path.dirname(fileName));
+                cwf = fileName;
+            }
+            else if (MoeditorFile.isDirectory(fileName)) {
+                cwd = path.normalize(fileName);
+                cwf = '';
+            }
+            this.config.set('cwd', cwd);
+            this.config.set('cwf', cwf);
+        }
+        this.windows.push(new MoeditorWindow(cwd, cwf));
+
     }
 
     run() {
@@ -118,8 +119,11 @@ class MoeditorApplication {
     registerAppMenu() {
         require('./moe-menu')(
             {
+                windowNew: (w) => {
+                    MoeditorAction.NewWindow();
+                },
                 fileNew: (w) => {
-                    MoeditorAction.openNew();
+                    MoeditorAction.NewFile();
                 },
                 fileOpen: (w) => {
                     MoeditorAction.open();

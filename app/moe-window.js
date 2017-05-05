@@ -27,17 +27,14 @@ const BrowserWindow = require('electron').BrowserWindow,
       Path = require('path');
 
 class MoeditorWindow {
-	constructor(path) {
+	constructor(path,fileName) {
         moeApp.newWindow = this;
-
-        if (MoeditorFile.isDirectory(path)) {
-            this.directory = path
-            this.fileName = '';
+        this.directory = path
+        this.fileName = fileName;
+        if (MoeditorFile.isFile(fileName)) {
+            this.fileContent = this.content = MoeditorFile.read(fileName).toString();
+        }else{
             this.fileContent = this.content = '';
-        } else {
-            this.directory = require('path').dirname(path);
-            this.fileName = path;
-            this.fileContent = this.content = MoeditorFile.read(path).toString();
         }
         this.changed = false;
         const debug = (moeApp.flag.debug | moeApp.config.get('debug')) != 0;
@@ -64,19 +61,54 @@ class MoeditorWindow {
             this.window.webContents.openDevTools();
         }
 	}
-    /* open file only from treeView */
-    openFile(path){
-        if(!MoeditorFile.isFile(path)){
-            return false;
-        }
-        this.fileName = path;
-        // moeApp.config.set('cwd',this.directory)
-        moeApp.config.set('cwf',path);
-        this.fileContent = this.content = MoeditorFile.read(path).toString();
-        // this.window.loadURL('file://' + Const.path + '/views/main/index.html');
-        this.window.webContents.send("openFile", this.content);
+    /* open file or folder from current window */
+    open(path, fileName){
+        if(MoeditorFile.isDirectory(path)){
+            if(path == this.directory) return;
+            this.directory = path;
+            if(MoeditorFile.isFile(fileName) && this.fileName != fileName){
+                this.closeFile(this.fileName);
+                this.fileName = fileName;
+                this.fileContent = this.content = MoeditorFile.read(path).toString();
+                this.changed = false;
+            }
+            this.window.loadURL('file://' + Const.path + '/views/main/index.html');
+            moeApp.config.set('cwd', path);
+            if (this.fileName.indexOf(path) == 0){
+                moeApp.config.set('cwf', fileName);
+            }
+        }else if(MoeditorFile.isFile(path)){
+            this.closeFile(this.fileName);
+            this.fileName = path;
+            this.fileContent = this.content = MoeditorFile.read(path).toString();
+            this.window.webContents.send("openFile", this.content);
+            if (path.indexOf(this.directory) == 0){
+                moeApp.config.set('cwf', path);
+            }
+        }else{
+            this.closeFile(this.fileName);
+            this.fileName = '';
+            this.fileContent = this.content = '';
+            this.window.webContents.send("openFile", this.content);
+        }     
     }
+    closeFile(fileName){
+        if (this.changed) {
+                const choice = dialog.showMessageBox(
+                    this.window,
+                    {
+                        type: 'question',
+                        buttons: [__("Yes"), __("No"), __("Cancel")],
+                        title: __("Confirm"),
+                        message: __("Save changes to file?")
+                    }
+                );
 
+                if (choice == 0) {
+                    if (!MoeditorAction.save(this.window)) e.preventDefault();
+                } else if (choice == 2) e.preventDefault();
+            }
+    }
     registerEvents() {
         this.window.on('close', (e) => {
             if (this.changed) {

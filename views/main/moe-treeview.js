@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.getAttribute('data-isdir') === 'true') {
             toggleDir(e);
         }else{
-            w.openFile(MoeditorPath.getById(e.getAttribute('data-id')).path);
+            w.open(MoeditorPath.getById(e.getAttribute('data-id')).path);
         }
     }
 

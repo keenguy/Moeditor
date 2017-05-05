@@ -102,7 +102,8 @@ const strings = {
 	"en": {
         "_name": "English",
 
-        "New": "New",
+        "New Window": "New Window",
+        "New File": "New File",
         "Open": "Open",
         "Save": "Save",
         "Save as": "Save as",
